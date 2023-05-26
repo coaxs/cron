@@ -223,7 +223,7 @@ class CronParserIntegrationTest {
     }
 
     @Test
-    void parse_whenCronInCronWithCommandContainsDayAsString__shouldReturnCronValue() {
+    void parse_whenCronInCronWithCommandContainsDayAsString_shouldReturnCronValueWithCronPartsContainingValueRepresentingProvidedDay() {
         val cronWithCommand = prepareCronWithCommand("MON");
         val cronParser = createCronParser();
         val expectedCronParts = ImmutableMap.of(LABEL, ImmutableSet.of(1));
