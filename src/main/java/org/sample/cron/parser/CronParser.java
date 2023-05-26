@@ -6,7 +6,6 @@ import org.sample.cron.input.CronElementConfiguration;
 import org.sample.cron.input.CronWithCommand;
 import org.sample.cron.output.CronValue;
 import org.sample.cron.parser.part.CronPartWithLimits;
-import org.sample.cron.parser.part.PartParser;
 
 import java.util.Collection;
 import java.util.Collections;

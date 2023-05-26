@@ -8,6 +8,8 @@ import lombok.val;
 import java.util.Map;
 import java.util.Set;
 
+import static org.jooq.lambda.Seq.seq;
+
 @RequiredArgsConstructor(staticName = "of")
 public class DaysParser extends BasePartParser {
     private static final Map<String, String> DAYS = ImmutableMap.of(
@@ -36,12 +38,11 @@ public class DaysParser extends BasePartParser {
     Set<Integer> process(
             final CronPartWithLimits cronPart
     ) {
-        val newCron = DAYS.entrySet()
-                .stream()
-                .reduce(
-                        cronPart.getPart(),
-                        (p, entry) -> p.replaceAll(entry.getKey(), entry.getValue()),
-                        (a, b) -> a
+        val initialCronPart = cronPart.getPart();
+        val newCron = seq(DAYS.entrySet().stream())
+                .foldLeft(
+                        initialCronPart,
+                        (actualCron, dayOfWeekEntry) -> actualCron.replaceAll(dayOfWeekEntry.getKey(), dayOfWeekEntry.getValue())
                 );
         return successor.parse(
                 cronPart.toBuilder()

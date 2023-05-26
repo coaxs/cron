@@ -22,6 +22,7 @@
         <assertj-core.version>3.24.2</assertj-core.version>
         <maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
         <maven-assembly-plugin.version>3.5.0</maven-assembly-plugin.version>
+        <jool.version>0.9.15</jool.version>
     </properties>
 
     <dependencies>
@@ -34,6 +35,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>${jool.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
