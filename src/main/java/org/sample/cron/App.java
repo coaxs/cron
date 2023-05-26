@@ -12,40 +12,53 @@ public class App {
     public static void main(final String[] args) {
         val argsBasedCronWithCommandExtractor = ArgsBasedCronWithCommandExtractor.of();
         val cronWithCommand = argsBasedCronWithCommandExtractor.extract(args);
+        val defaultCronPartParser = RangeCheckerPartParser.of(CommaParser.of(AsteriskParser.of(DashParser.of(SlashParser.of(IntegerParser.of(ThrowingParser.of()))))));
+        val daysCronPartParser = RangeCheckerPartParser.of(CommaParser.of(DaysParser.of(AsteriskParser.of(DashParser.of(SlashParser.of(IntegerParser.of(ThrowingParser.of())))))));
         val configs = ImmutableSet.of(
                 CronElementConfiguration.builder()
                         .label("minutes")
                         .position(0)
                         .min(0)
                         .max(59)
+                        .partParser(defaultCronPartParser)
                         .build(),
                 CronElementConfiguration.builder()
                         .label("hours")
                         .position(1)
                         .min(0)
                         .max(23)
+                        .partParser(defaultCronPartParser)
                         .build(),
                 CronElementConfiguration.builder()
                         .label("day of month")
                         .position(2)
                         .min(0)
                         .max(31)
+                        .partParser(defaultCronPartParser)
                         .build(),
                 CronElementConfiguration.builder()
                         .label("month")
                         .position(3)
                         .min(1)
                         .max(12)
+                        .partParser(defaultCronPartParser)
                         .build(),
                 CronElementConfiguration.builder()
                         .label("day of week")
                         .position(4)
                         .min(1)
                         .max(7)
+                        .partParser(daysCronPartParser)
+                        .build(),
+                CronElementConfiguration.builder()
+                        .label("year")
+                        .position(5)
+                        .min(2020)
+                        .max(2025)
+                        .partParser(defaultCronPartParser)
                         .build()
         );
-        val cronPartParser = RangeCheckerPartParser.of(CommaParser.of(AsteriskParser.of(DashParser.of(SlashParser.of(IntegerParser.of(ThrowingParser.of()))))));
-        val parser = CronParser.of(cronPartParser, configs);
+        val parser = CronParser.of(configs);
         val cronValue = parser.parse(cronWithCommand);
         System.out.println(cronValue);
     }

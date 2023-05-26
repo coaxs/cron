@@ -205,8 +205,8 @@ class CronParserIntegrationTest {
     void parse_whenCronInCronWithCommandContainsArgumentWhichIsSingleInteger_shouldReturnCronValueWithCronPartsContainingSingleInteger() {
         val cronWithCommand = prepareCronWithCommand("1");
         val cronParser = createCronParser();
-
         val expectedCronParts = ImmutableMap.of(LABEL, ImmutableSet.of(1));
+
         val actualResult = cronParser.parse(cronWithCommand);
 
         assertThat(actualResult.getCronParts()).isEqualTo(expectedCronParts);
@@ -214,12 +214,23 @@ class CronParserIntegrationTest {
 
     @Test
     void parse_whenCronInCronWithCommandContainsArgumentWhichIsNotSupported_shouldThrowParserNotFoundException() {
-        val cronWithCommand = prepareCronWithCommand("MON");
+        val cronWithCommand = prepareCronWithCommand("NOT_SUPPORTED");
         val cronParser = createCronParser();
 
         val actualException = catchThrowable(() -> cronParser.parse(cronWithCommand));
 
         assertThat(actualException).isInstanceOf(ParserNotFoundException.class);
+    }
+
+    @Test
+    void parse_whenCronInCronWithCommandContainsDayAsString__shouldReturnCronValue() {
+        val cronWithCommand = prepareCronWithCommand("MON");
+        val cronParser = createCronParser();
+        val expectedCronParts = ImmutableMap.of(LABEL, ImmutableSet.of(1));
+
+        val actualResult = cronParser.parse(cronWithCommand);
+
+        assertThat(actualResult.getCronParts()).isEqualTo(expectedCronParts);
     }
 
     @Test
@@ -243,14 +254,15 @@ class CronParserIntegrationTest {
     }
 
     private CronParser createCronParser() {
+        val cronParser = RangeCheckerPartParser.of(CommaParser.of(DaysParser.of(AsteriskParser.of(DashParser.of(SlashParser.of(IntegerParser.of(ThrowingParser.of())))))));
         return CronParser.of(
-                RangeCheckerPartParser.of(CommaParser.of(AsteriskParser.of(DashParser.of(SlashParser.of(IntegerParser.of(ThrowingParser.of())))))),
                 ImmutableSet.of(
                         CronElementConfiguration.builder()
                                 .label(LABEL)
                                 .position(POSITION)
                                 .min(MIN)
                                 .max(MAX)
+                                .partParser(cronParser)
                                 .build()
                 )
         );

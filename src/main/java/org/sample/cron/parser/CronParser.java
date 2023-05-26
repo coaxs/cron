@@ -19,7 +19,6 @@ import static java.util.Objects.isNull;
 public class CronParser {
     private static final String SPLIT_REGEX = " ";
 
-    private final PartParser partParser;
     private final Collection<CronElementConfiguration> configs;
 
     public CronValue parse(
@@ -32,7 +31,7 @@ public class CronParser {
                         Collectors.collectingAndThen(
                                 Collectors.toMap(
                                         CronElementConfiguration::getLabel,
-                                        config -> partParser.parse(
+                                        config -> config.getPartParser().parse(
                                                 CronPartWithLimits.of(
                                                         cronParts[config.getPosition()],
                                                         config.getMin(),
